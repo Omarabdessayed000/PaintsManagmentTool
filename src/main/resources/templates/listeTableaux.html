@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" xmlns:sec=https://www.thymeleaf.org/thymeleaf-extras-springsecurity5>
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.1.1/css/bootstrap.min.css" />
+
+<head>
+	<meta charset="utf-8">
+	<title>Liste des Tableaux</title>
+</head>
+
+<body>
+	<div layout:fragment="Mycontent">
+		<div class="container mt-5">
+			<div class="card">
+				<div class="card-header">
+					<h4 style=" color:rgb(0, 0, 64); "> Paints Management Corner  </h1>
+				</div>
+				<div class="card-body">
+					<table class="table table-striped">
+						<tr>
+							<th style=" color:rgb(0, 0, 64); ">ID</th>
+							<th style=" color:rgb(0, 0, 64); ">Nom Tableau</th>
+							<th style=" color:rgb(0, 0, 64); ">Prix</th>
+							<th style=" color:rgb(0, 0, 64); ">Painter</th>
+							<th style=" color:rgb(0, 0, 64); ">Date of Acquisition</th>
+							<th style=" color:rgb(0, 0, 64); ">Style</th>
+							<th sec:authorize="hasRole('ADMIN')" style=" color:rgb(78, 205, 196); ">Modify</th>
+							<th sec:authorize="hasRole('ADMIN')" style=" color:red;">Delete</th>
+						</tr>
+						<tr th:each="p:${tableaux.content}">
+							<td th:text="${p.idTableau}"></td>
+							<td th:text="${p.nomTableau}"></td>
+							<td th:text="${p.prixTableau}"></td>
+							<td th:text="${p.painterTableau}"></td>
+							<td th:text="${p.dateCreation}"></td>
+
+							<td th:if="${!#strings.isEmpty(p.style)}" th:text="${p.style.nomS}"></td>
+							<td th:if="${#strings.isEmpty(p.style)}" th:text="${'Pas de Style'}"></td>
+
+
+							<td sec:authorize="hasRole('ADMIN')"><a class="btn btn-outline-info"
+									th:href="@{modifierTableau(id=${p.idTableau})}"><svg
+										xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+										class="bi bi-box-arrow-in-down-right" viewBox="0 0 16 16">
+										<path fill-rule="evenodd"
+											d="M6.364 2.5a.5.5 0 0 1 .5-.5H13.5A1.5 1.5 0 0 1 15 3.5v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 2 13.5V6.864a.5.5 0 1 1 1 0V13.5a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H6.864a.5.5 0 0 1-.5-.5z" />
+										<path fill-rule="evenodd"
+											d="M11 10.5a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1 0-1h3.793L1.146 1.854a.5.5 0 1 1 .708-.708L10 9.293V5.5a.5.5 0 0 1 1 0v5z" />
+									</svg></a>
+							</td>
+							<td sec:authorize="hasRole('ADMIN')"><a class="btn btn-outline-danger"
+									onclick="return confirm('Etes-vous sur ?')" th:href="@{supprimerTableau(id=${p.idTableau},
+page=${currentPage},size=${size})}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+										class="bi bi-file-earmark-x-fill" viewBox="0 0 16 16">
+										<path
+											d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.854 7.146 8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 1 1 .708-.708z" />
+									</svg></a></td>
+						</tr>
+					</table>
+					<ul class="nav nav-pills">
+						<li th:each="page,status:${pages}">
+							<a th:class="${status.index==currentPage?'btn btn-info':'btn' }"
+								th:href="@{ ListeTableaux(page=${status.index}, size=${size} ) }"
+								th:text="${status.index }"></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
